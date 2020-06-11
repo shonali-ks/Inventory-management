@@ -1,0 +1,102 @@
+{% extends 'base-template.html' %}
+{% block content %}
+    <div class="container">
+        <h3 align="center" class="font-weight-light">Summary</h3>
+        {% if database == None or database|length == 0 %}
+            <h3 align="center" class="font-weight-light">Summary not available yet</h3>
+        {% else %}
+            <table class="table" id="summary">
+                <thead>
+                <tr>
+                    <th scope="col">Product</th>
+                    <th scope="col">Warehouse</th>
+                    <th scope="col">Quantity</th>
+                </tr>
+                </thead>
+                <tbody>
+                <script>console.log(database)</script>
+                    {% for data in database %}
+                        {% if data[2] != 0 %}
+                        <tr>
+                            <td>{{ data[0] }}</td>
+                            <td>{{ data[1] }}</td>
+                            <td>{{ data[2] }}</td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+        <br><hr><br>
+
+        <h3 align="center" class="font-weight-light">Customer Sales</h3>
+        <form action = "{{ url_for('customer') }}" method = "POST">
+            <div class="form-row" title="Add logs">
+                <div class="col">
+                    <input name= "prod_name" id="prod_name" list="products" placeholder="Product Name" class="form-control" autocomplete="on" required autofocus>
+                    <datalist id="products">
+                        {% for product in products %}
+                            <option value="{{ product[1] }}" id="prod_{{ product[0] }}">
+                        {% endfor %}
+                    </datalist>
+                </div>
+                <div class="col">
+                    <input name="from_loc" id="from_loc" list="locations_to_from" placeholder="From Warehouse" class="form-control" autocomplete="off">
+                </div>
+                <div class="col">
+                    <input name="name"  placeholder="costumer_name" class="form-control" autocomplete="off">
+                </div>
+                <div class="col">
+                    <input name="phone"  placeholder="phone number" class="form-control" autocomplete="off">
+                </div>
+                <div class="col slide-container">
+                    <input name="quantity" type="number" placeholder="quantity" class="slider" id="slider_range" required title="Product Range">
+                    
+                </div>
+                <div class="col">
+                    <input type= "submit" id="submit" class="btn btn-info btn-group-toggle" value= "submit" /><br>
+                </div>
+                <datalist id="locations_to_from">
+                    {% for location in locations %}
+                        <option value="{{ location[1] }}" id="loc_{{ location[0] }}">
+                    {% endfor %}
+                </datalist>
+            </div>
+        </form>
+
+        <br><hr><br>
+
+        <h3 align="center" class="font-weight-light">Sales History</h3>
+        {% if logs == None or logs|length == 0 %}
+            <h3 align="center" class="font-weight-light">Data not available yet</h3>
+        {% else %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Transaction ID</th>
+                        <th scope="col">Product Name</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Phone no.</th>
+                        <th scope="col">From Location</th>
+                        <th scope="col">UTC Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                        <tr>
+                            <td>{{ log[0] }}</td>
+                            <td>{{ log[1] }}</td>
+                            <td>{{ log[3] }}</td>
+                            <td>{{ log[4] }}</td>
+                            <td>{{ log[5] }}</td>
+                            <td>{{ log[6] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+    </div>
+
+{% endblock %}
